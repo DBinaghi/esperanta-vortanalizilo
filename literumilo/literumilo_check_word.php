@@ -315,8 +315,7 @@
 		} else {
 			// Compound word: walk the MorphemeList
 			$ml   = $data['morpheme_list'];
-			$last = $ml->get_last_index();
-			for ($i = 0; $i <= $last; $i++) {
+			for ($i = 0; $i <= $ml->get_last_index(); $i++) {
 				$e = $ml->get($i);
 				if ($e === null) continue;
 				if ($e->flag === 'separator') {
@@ -330,19 +329,19 @@
 		// Grammatical ending
 		$ending = $data['ending'];
 		$finajxo = $ending->ending;
-		$isAkuzativo = false;
+		$havasAkuzativon = false;
 		if (mb_substr($finajxo, -1) == 'n') {
-			$isAkuzativo = true;
-			$finajxo = mb_substr($finajxo, 0, mb_strlen($finajxo) - 1);
+			$havasAkuzativon = true;
+			$finajxo = mb_substr($finajxo, 0, -1);
 		}
-		$isPluralo = false;
+		$havasPluralon = false;
 		if (mb_substr($finajxo, -1) == 'j') {
-			$isPluralo = true;
-			$finajxo = mb_substr($finajxo, 0, mb_strlen($finajxo) - 1);
+			$havasPluralon = true;
+			$finajxo = mb_substr($finajxo, 0, -1);
 		}
 		$result[] = ['morpheme' => $finajxo, 'pos' => pos_label($ending->part_of_speech), 'type' => 'finaĵo'];
-		if ($isPluralo) $result[] = ['morpheme' => 'j', 'pos' => 'pluralo', 'type' => 'pluralo'];
-		if ($isAkuzativo) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativo', 'type' => 'akuzativo'];
+		if ($havasPluralon) $result[] = ['morpheme' => 'j', 'pos' => 'pluralo', 'type' => 'pluralo'];
+		if ($havasAkuzativon) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativo', 'type' => 'akuzativo'];
 	 
 		return $result;
 	}
