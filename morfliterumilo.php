@@ -2,13 +2,6 @@
 	require_once 'literumilo/literumilo.php';
 
 	if (isset($_POST['parola'])) $testo_da_analizzare = $_POST['parola'];
-
-	// $r = literumilo_check_word("miskomprenita");
-	// $r->valid = true
-	// $r->word  = "mis.kompren.it.a"
-
-	// $out = literumilo_analyze_string($testo, true);  // modalità morfemi
-	// $unk = literumilo_analyze_string($testo, false); // modalità spell-check
 ?>
 <!DOCTYPE html>
 <html lang="eo">
@@ -33,11 +26,10 @@
 			.esempio-titolo { margin-top: 30px; font-weight: bold; color: #666; border-bottom: 1px solid #ddd; }
 			.footer-info { font-size: 0.8em; color: #777; margin-top: 10px; }
 
-
-			.descrizione { font-weight:bold; margin-bottom: .5em; font-family:sans-serif; }
+			.descrizione { font-weight:bold; margin-bottom: .2em; font-family:sans-serif; }
 			.analizero { font-size:1.2em; font-weight:bold; display:block; margin-bottom: 2px; }
 
-			/* Stile base dei blocchetti */
+			/* Stile base delle tessere */
 			.morfemo {
 				display: inline-block;
 				vertical-align: top;
@@ -53,13 +45,15 @@
 				box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Leggera profondità */
 			}
 			
-			.morfemo.prefikso		{ background-color: #fef3c7; border-color: #f59e0b; color: #92400e; } /* Giallo miele */
-			.morfemo.radiko       { background-color: #dcfce7; border-color: #22c55e; color: #166534; } /* Verde salvia */
-			.morfemo.sufikso     { background-color: #dbeafe; border-color: #3b82f6; color: #1e40af; } /* Blu pastello */
-			.morfemo.participo,.morfemo.pluralo { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; } /* Rosso rosa */
-			.morfemo.finaĵo     { background-color: #ffedd5; border-color: #f97316; color: #9a3412; } /* Arancio tenue */
-			.morfemo.disigilo,.morfemo.akuzativo  { background-color: #fecaca; border-color: #dc2626; color: #7f1d1d; } /* Rosso profondo */
-			.etikedo 			{ display: block; font-size: 0.65em; opacity: 0.7; }
+			.morfemo.prefikso	{ background-color: #fef3c7; border-color: #f59e0b; color: #92400e; } /* Giallo miele */
+			.morfemo.radiko		{ background-color: #dcfce7; border-color: #22c55e; color: #166534; } /* Verde salvia */
+			.morfemo.sufikso	{ background-color: #dbeafe; border-color: #3b82f6; color: #1e40af; } /* Blu pastello */
+			.morfemo.participo	{ background-color: #f3e8ff; border-color: #a855f7; color: #6b21a8; } /* Viola lavanda */
+			.morfemo.pluralo	{ background-color: #fee2e2; border-color: #ef4444; color: #991b1b; } /* Rosso rosa */
+			.morfemo.finaĵo		{ background-color: #fecaca; border-color: #dc2626; color: #7f1d1d; } /* Rosso profondo */
+			.morfemo.disigilo	{ background-color: #cffafe; border-color: #06b6d4; color: #155e75; } /* Ciano-turchese */
+			.morfemo.akuzativo	{ background-color: #ffedd5; border-color: #f97316; color: #9a3412; } /* Arancio tenue */
+			.etikedo			{ display: block; font-size: 0.75em; opacity: 0.7; }
 		</style>
 	</head>
 
