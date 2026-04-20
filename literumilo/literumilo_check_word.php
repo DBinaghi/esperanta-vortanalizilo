@@ -212,7 +212,7 @@
 	function _analyse_word(string $original_word, array $dictionary): ?array {
 		$len = mb_strlen($original_word);
 		if ($len === 1) return null;
-	 
+
 		if ($len > 2) {
 			$chars = mb_str_split($original_word);
 			if (is_hyphen($chars[1])) return null; // abbreviation, skip
@@ -235,10 +235,10 @@
 			return ['morpheme_list' => null, 'ending' => null,
 					'simple_entry' => $entry, 'without_ending' => true];
 		}
-	 
+
 		$ending = get_ending($word);
 		if ($ending === null) return null;
-	 
+
 		$word_no_ending = mb_substr($word, 0, $word_length - $ending->length);
 	 
 		// Simple word
@@ -310,28 +310,39 @@
 	 
 		if ($data['simple_entry'] !== null) {
 			// Simple non-compound word
-			$e      = $data['simple_entry'];
-			$ending = $data['ending'];
-			$result[] = ['morpheme' => $e->morpheme,    'pos' => pos_label($e->part_of_speech), 'type' => 'radiko'];
-			$result[] = ['morpheme' => $ending->ending, 'pos' => pos_label($ending->part_of_speech), 'type' => 'finaĵo'];
-			return $result;
-		}
-	 
-		// Compound word: walk the MorphemeList
-		$ml   = $data['morpheme_list'];
-		$last = $ml->get_last_index();
-		for ($i = 0; $i <= $last; $i++) {
-			$e = $ml->get($i);
-			if ($e === null) continue;
-			if ($e->flag === 'separator') {
-				$result[] = ['morpheme' => $e->morpheme, 'pos' => pos_label($e->part_of_speech), 'type' => 'disigilo'];
-			} else {
-				$result[] = ['morpheme' => $e->morpheme, 'pos' => pos_label($e->part_of_speech), 'type' => $syn_type($e->synthesis)];
+			$e = $data['simple_entry'];
+			$result[] = ['morpheme' => $e->morpheme, 'pos' => pos_label($e->part_of_speech), 'type' => 'radiko'];
+		} else {
+			// Compound word: walk the MorphemeList
+			$ml   = $data['morpheme_list'];
+			$last = $ml->get_last_index();
+			for ($i = 0; $i <= $last; $i++) {
+				$e = $ml->get($i);
+				if ($e === null) continue;
+				if ($e->flag === 'separator') {
+					$result[] = ['morpheme' => $e->morpheme, 'pos' => pos_label($e->part_of_speech), 'type' => 'disigilo'];
+				} else {
+					$result[] = ['morpheme' => $e->morpheme, 'pos' => pos_label($e->part_of_speech), 'type' => $syn_type($e->synthesis)];
+				}
 			}
 		}
+
 		// Grammatical ending
-		$ending   = $data['ending'];
-		$result[] = ['morpheme' => $ending->ending, 'pos' => pos_label($ending->part_of_speech), 'type' => 'finaĵo'];
+		$ending = $data['ending'];
+		$finajxo = $ending->ending;
+		$isAkuzativo = false;
+		if (mb_substr($finajxo, -1) == 'n') {
+			$isAkuzativo = true;
+			$finajxo = mb_substr($finajxo, 0, mb_strlen($finajxo) - 1);
+		}
+		$isPluralo = false;
+		if (mb_substr($finajxo, -1) == 'j') {
+			$isPluralo = true;
+			$finajxo = mb_substr($finajxo, 0, mb_strlen($finajxo) - 1);
+		}
+		$result[] = ['morpheme' => $finajxo, 'pos' => pos_label($ending->part_of_speech), 'type' => 'finaĵo'];
+		if ($isPluralo) $result[] = ['morpheme' => 'j', 'pos' => 'pluralo', 'type' => 'pluralo'];
+		if ($isAkuzativo) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativo', 'type' => 'akuzativo'];
 	 
 		return $result;
 	}
