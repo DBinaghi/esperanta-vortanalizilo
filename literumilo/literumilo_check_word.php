@@ -180,25 +180,25 @@
 	 
 	function pos_label(int $pos): string {
 		static $map = [
-			POS::Substantive      => 'Substantivo',
+			POS::Substantive      => 'Substantiva',
 			POS::SubstantiveVerb  => 'Substantivo verba',
-			POS::Verb             => 'Verbo',
-			POS::Adjective        => 'Adjektivo',
+			POS::Verb             => 'Verba',
+			POS::Adjective        => 'Adjektiva',
 			POS::Number           => 'Nombro',
-			POS::Adverb           => 'Adverbo',
+			POS::Adverb           => 'Adverba',
 			POS::Pronoun          => 'Pronomo',
 			POS::PronounAdjective => 'Pronomo adjektiva',
-			POS::Preposition      => 'Preposicio',
-			POS::Conjunction      => 'Conjunkcio',
-			POS::Subjunction      => 'Subjunkcio',
-			POS::Interjection     => 'Interjekcio',
+			POS::Preposition      => 'Preposicia',
+			POS::Conjunction      => 'Konjunkcia',
+			POS::Subjunction      => 'Subjunkcia',
+			POS::Interjection     => 'Interjekcia',
 			POS::Prefix           => 'Prefikso',
 			POS::TechPrefix       => 'Teknika prefikso',
 			POS::Suffix           => 'Sufikso',
 			POS::Article          => 'Artikolo',
-			POS::Participle       => 'Participo',
+			POS::Participle       => 'Participa',
 			POS::Abbreviation     => 'Mallongigo',
-			POS::Letter           => 'Litero',
+			POS::Letter           => 'Litera',
 		];
 		return $map[$pos] ?? 'Nekonata';
 	}
@@ -315,16 +315,16 @@
 
 		if ($fin !== '') {
 			switch ($fin) {
-				case 'a':  $fin_pos = 'Adjektivo';   break;
-				case 'e':  $fin_pos = 'Adverbo';     break;
-				case 'o':  $fin_pos = 'Substantivo'; break;
-				case 'i':  $fin_pos = 'Verbo';       break;
+				case 'a':  $fin_pos = 'Adjektiva';   break;
+				case 'e':  $fin_pos = 'Adverba';     break;
+				case 'o':  $fin_pos = 'Substantiva'; break;
+				case 'i':  $fin_pos = 'Verba';       break;
 				default:   $fin_pos = pos_label($e->part_of_speech); break;
 			}
 			$result[] = ['morpheme' => $fin, 'pos' => $fin_pos, 'type' => 'finaĵo'];
 		}
-		if ($havasPluralon)   $result[] = ['morpheme' => 'j', 'pos' => 'pluralo',   'type' => 'pluralo'];
-		if ($havasAkuzativon) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativo', 'type' => 'akuzativo'];
+		if ($havasPluralon)   $result[] = ['morpheme' => 'j', 'pos' => 'plurala',   'type' => 'pluralo'];
+		if ($havasAkuzativon) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativa', 'type' => 'akuzativo'];
 
 		return $result;
 	}
@@ -340,7 +340,7 @@
 		// Single character
 		if ($len === 1) {
 			if (!is_word_char($original_word)) return null;
-			return [['morpheme' => $original_word, 'pos' => 'Litero', 'type' => 'radiko']];
+			return [['morpheme' => $original_word, 'pos' => 'Litera', 'type' => 'radiko']];
 		}
 	 
 		// Pronoun exceptions
@@ -350,8 +350,8 @@
 		if (isset($pronouns[$conv])) {
 			[$stem, $acc] = $pronouns[$conv];
 			return [
-				['morpheme' => $stem, 'pos' => 'Pronoun',    'type' => 'radiko'],
-				['morpheme' => $acc,  'pos' => 'Accusative',  'type' => 'akuzativo'],
+				['morpheme' => $stem, 'pos' => 'Pronomo',    'type' => 'radiko'],
+				['morpheme' => $acc,  'pos' => 'Akuzativo',  'type' => 'akuzativa'],
 			];
 		}
 	 
@@ -361,9 +361,9 @@
 		$result = [];
 	 
 		// type helper based on Synthesis constant
-		$syn_type = function(int $syn): string {
+		$syn_type = function(int $syn, int $pos): string {
 			switch ($syn) {
-				case Synthesis::Prefix:     return 'prefikso';
+				case Synthesis::Prefix:     return $pos === POS::Preposition ? 'preposicio' : 'prefikso';
 				case Synthesis::Suffix:     return 'sufikso';
 				case Synthesis::Participle: return 'participo';
 				default:                    return 'radiko';
@@ -393,7 +393,7 @@
 					$result[] = ['morpheme' => $e->morpheme, 'pos' => pos_label($e->part_of_speech), 'type' => 'disigilo'];
 				} else {
 					// Analizziamo il morfema della lista (nel caso contenesse punti)
-					_add_analyzed_morphemes($result, $e->morpheme, $e->part_of_speech, $syn_type($e->synthesis));
+					_add_analyzed_morphemes($result, $e->morpheme, $e->part_of_speech, $syn_type($e->synthesis, $e->part_of_speech));
 				}
 			}
 		}
@@ -412,8 +412,8 @@
 			$finajxo = mb_substr($finajxo, 0, -1);
 		}
 		$result[] = ['morpheme' => $finajxo, 'pos' => pos_label($ending->part_of_speech), 'type' => 'finaĵo'];
-		if ($havasPluralon) $result[] = ['morpheme' => 'j', 'pos' => 'pluralo', 'type' => 'pluralo'];
-		if ($havasAkuzativon) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativo', 'type' => 'akuzativo'];
+		if ($havasPluralon) $result[] = ['morpheme' => 'j', 'pos' => 'plurala', 'type' => 'plurala'];
+		if ($havasAkuzativon) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativa', 'type' => 'akuzativo'];
 	 
 		return $result;
 	}
@@ -653,9 +653,9 @@
 		Ending       $ending,
 		bool         $dubious = false
 	): array {
-		$syn_type = function(int $syn): string {
+		$syn_type = function(int $syn, int $pos): string {
 			switch ($syn) {
-				case Synthesis::Prefix:     return 'prefikso';
+				case Synthesis::Prefix:     return $pos === POS::Preposition ? 'preposicio' : 'prefikso';
 				case Synthesis::Suffix:     return 'sufikso';
 				case Synthesis::Participle: return 'participo';
 				default:                    return 'radiko';
@@ -673,7 +673,7 @@
 			} else {
 				_add_analyzed_morphemes(
 					$result, $e->morpheme, $e->part_of_speech,
-					$syn_type($e->synthesis), $dubious
+					$syn_type($e->synthesis, $e->part_of_speech), $dubious
 				);
 			}
 		}
@@ -685,8 +685,8 @@
 		if (mb_substr($fin, -1) === 'n') { $havasAkuzativon = true; $fin = mb_substr($fin, 0, -1); }
 		if (mb_substr($fin, -1) === 'j') { $havasPluralon   = true; $fin = mb_substr($fin, 0, -1); }
 		$result[] = ['morpheme' => $fin, 'pos' => pos_label($ending->part_of_speech), 'type' => 'finaĵo'];
-		if ($havasPluralon)   $result[] = ['morpheme' => 'j', 'pos' => 'pluralo',   'type' => 'pluralo'];
-		if ($havasAkuzativon) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativo', 'type' => 'akuzativo'];
+		if ($havasPluralon)   $result[] = ['morpheme' => 'j', 'pos' => 'plurala',   'type' => 'pluralo'];
+		if ($havasAkuzativon) $result[] = ['morpheme' => 'n', 'pos' => 'akuzativa', 'type' => 'akuzativo'];
 
 		return $result;
 	}

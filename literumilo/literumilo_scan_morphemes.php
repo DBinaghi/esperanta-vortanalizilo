@@ -465,6 +465,16 @@ function scan_morphemes(MorphemeList $ml): bool {
 			if (!check_participle($idx, $ml)) return false;
 		} elseif ($syn === Synthesis::Limited) {
 			if (!check_limited_synthesis($morpheme, $idx, $ml)) return false;
+		}  elseif ($syn === Synthesis::Suffix) {
+			$has_root = false;
+			for ($n = 0; $n < $idx; $n++) {
+				$e = $ml->get($n);
+				if ($e && ($e->synthesis === Synthesis::UnLimited || $e->synthesis === Synthesis::Limited)) {
+					$has_root = true;
+					break;
+				}
+			}
+			if (!$has_root) return false;
 		}
 	}
 	return true;
